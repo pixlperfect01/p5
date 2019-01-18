@@ -137,33 +137,33 @@ function setup() {
   MarioWalkLeft2 = reverse(MarioWalkRight2.copy());
   MarioStillLeft = reverse(MarioStillRight.copy());
   MarioJumpLeft = reverse(MarioJumpRight.copy());
-  Goombas.add(new Goomba(1, 0, true));
-  Goombas.add(new Goomba(7, 0, true));
+  Goombas.push(new Goomba(1, 0, true));
+  Goombas.push(new Goomba(7, 0, true));
 }
-void draw() {
+function draw() {
   //frameRate(1);
   if (!Alive) {
-    exit();
+    noLoop();
   }
   playerOnGround = false;
   moving = false;
   playerVelX = 0.0;
   //playerVelY = 0.0;
-  if (LEFT_ARROW) {
+  if (LEFT_ARR) {
     playerVelX = -.15;
     wC++;
     dir = false;
     moving = true;
   }  
-  if (RIGHT_ARROW) {
+  if (RIGHT_ARR) {
     playerVelX = .15;
     wC++;
     dir = true;
     moving = true;
   }
   playerVelY += .02;
-  float newPlayerPosX = playerPosX + playerVelX;
-  float newPlayerPosY = playerPosY + playerVelY;
+  var newPlayerPosX = playerPosX + playerVelX;
+  var newPlayerPosY = playerPosY + playerVelY;
 
     if (GetTile(newPlayerPosX, newPlayerPosY)=='o') {
       SetTile(newPlayerPosX, newPlayerPosY, '.');
@@ -200,23 +200,23 @@ void draw() {
 
   if (playerVelX<=0) {
     if (GetTile(newPlayerPosX, playerPosY)!='.'||GetTile(newPlayerPosX, playerPosY+.85)!='.') {
-      newPlayerPosX = int(newPlayerPosX) + 1;
+      newPlayerPosX = Math.trunc(newPlayerPosX) + 1;
       playerVelX = 0;
     }
   } else {
     if (GetTile(newPlayerPosX+1, playerPosY)!='.'||GetTile(newPlayerPosX+1, playerPosY+.85)!='.') {
-      newPlayerPosX = int(newPlayerPosX);
+      newPlayerPosX = Math.trunc(newPlayerPosX);
       playerVelX = 0;
     }
   }
   if (playerVelY<=0) {
     if (GetTile(newPlayerPosX, newPlayerPosY)!='.'||GetTile(newPlayerPosX+.85, newPlayerPosY)!='.') {
-      newPlayerPosY = int(newPlayerPosY) + 1;
+      newPlayerPosY = Math.trunc(newPlayerPosY) + 1;
       playerVelY = 0;
     }
   } else {
     if (GetTile(newPlayerPosX, newPlayerPosY+1)!='.'||GetTile(newPlayerPosX+.85, newPlayerPosY+1)!='.') {
-      newPlayerPosY = int(newPlayerPosY);
+      newPlayerPosY = Math.trunc(newPlayerPosY);
       playerVelY = 0;
       playerOnGround = true;
     }
@@ -230,18 +230,18 @@ void draw() {
   noStroke();
   tileWidth = 16;
   tileHeight = 16;
-  int visibleTilesX = width/tileWidth;
-  int visibleTilesY = height/tileHeight;
+  var visibleTilesX = width/tileWidth;
+  var visibleTilesY = height/tileHeight;
   offsetX = cameraPosX - float(visibleTilesX) / 2.0;
   offsetY = cameraPosY - float(visibleTilesY) / 2.0;
   if (offsetX<0) offsetX = 0;
   if (offsetY<0) offsetY = 0;
   if (offsetX>levelWidth-visibleTilesX) offsetX = levelWidth-visibleTilesX;
   if (offsetY>levelHeight-visibleTilesY) offsetY = levelHeight-visibleTilesY;
-  float tileOffsetX = (offsetX - int(offsetX)) * tileWidth;
-  float tileOffsetY = (offsetY - int(offsetY)) * tileHeight;
-  for (int x = -1; x < visibleTilesX+1; x++) {
-    for (int y = -1; y < visibleTilesY+1; y++) {
+  var tileOffsetX = (offsetX - Math.trunc(offsetX)) * tileWidth;
+  var tileOffsetY = (offsetY - Math.trunc(offsetY)) * tileHeight;
+  for (var x = -1; x < visibleTilesX+1; x++) {
+    for (var y = -1; y < visibleTilesY+1; y++) {
       char tileID = GetTile(x + offsetX, y + offsetY);
       if (tileID=='t') {
         SetTile(x + offsetX, y + offsetY, '.');
@@ -273,15 +273,15 @@ void draw() {
       }
     }
   }
-  for (int i=0; i<Goombas.size(); i++) {
-    Goomba g = Goombas.get(i);
+  for (var i=0; i<Goombas.size(); i++) {
+    Goombas[i];
       //g.alive = false;
   }
-  for (int i=Goombas.size()-1; i>=0; i--) {
-    Goombas.get(i).move();
-    Goombas.get(i).show();
-    if (!Goombas.get(i).alive) {
-      Goombas.remove(i);
+  for (var i=Goombas.size()-1; i>=0; i--) {
+    Goombas[i].move();
+    Goombas[i].show();
+    if (!Goombas[i].alive) {
+      Goombas.splice(i, 1);
     }
   }
   if (wC % 6 == 1) {
@@ -316,20 +316,20 @@ void draw() {
   }
 }
 
-char GetTile(float x, float y) {
+function GetTile( x, y) {
   if (x >= 0 && x < levelWidth && y >= 0 && y < levelHeight) {
-    return level.charAt(int(y) * levelWidth + int(x));
+    return level.charAt(Math.trunc(y) * levelWidth + Math.trunc(x));
   } else {
     return ' ';
   }
 }
 
-void SetTile(float Tx, float Ty, char c) {
-  String temp = "";
-  int x = int(Tx);
-  int y = int(Ty);
+void SetTile(Tx, Ty, c) {
+  var temp = "";
+  var x = Math.trunc((Tx));
+  var y = Math.trunc((Ty));
   if (x >= 0 && x < levelWidth && y >= 0 && y < levelHeight) {
-    for (int i = 0; i<level.length(); i++) {
+    for (var i = 0; i<level.length(); i++) {
       if (i==y*levelWidth+x) {
         temp+=c;
       } else {
@@ -339,49 +339,49 @@ void SetTile(float Tx, float Ty, char c) {
     level = temp;
   }
 }
-void keyPressed() {
+function keyPressed() {
   if (key == ' ') {
     if (playerVelY==0)
       playerVelY=-.4;
   }
   switch(keyCode) {
-  case UP:
-    UP_ARROW=true;
+  case UP_ARROW:
+    UP_ARR=true;
     break;
-  case DOWN:
-    DOWN_ARROW=true;
+  case DOWN_ARROW:
+    DOWN_ARR=true;
     break;
-  case LEFT:
-    LEFT_ARROW=true;
+  case LEFT_ARROW:
+    LEFT_ARR=true;
     break;
-  case RIGHT:
-    RIGHT_ARROW=true;
+  case RIGHT_ARROW:
+    RIGHT_ARR=true;
     break;
   }
 }
-void keyReleased() {
+functio keyReleased() {
   switch(keyCode) {
-  case UP:
-    UP_ARROW=false;
+  case UP_ARROW:
+    UP_ARR=false;
     break;
-  case DOWN:
+  case DOWN_ARROW:
     DOWN_ARROW=false;
     break;
-  case LEFT:
-    LEFT_ARROW=false;
+  case LEFT_ARROW:
+    LEFT_ARR=false;
     break;
-  case RIGHT:
-    RIGHT_ARROW=false;
+  case RIGHT_ARROW:
+    RIGHT_ARR=false;
     break;
   }
 }
-PImage reverse(PImage a) {
-  PImage img = createImage(a.width, a.height, RGB);
+function reverse(a) {
+  var img = createImage(a.width, a.height, RGB);
   a.loadPixels();
   img.loadPixels();
-  int A=a.width-1;
-  for (int y=0; y<a.height; y++) {
-    for (int x=0; x<a.width; x++) {
+  var A=a.width-1;
+  for (var y=0; y<a.height; y++) {
+    for (var x=0; x<a.width; x++) {
       img.pixels[y*a.width+x]=a.pixels[y*a.width+A];
       A--;
       if (A<0)
